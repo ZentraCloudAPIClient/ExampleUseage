@@ -54,5 +54,24 @@ response = requests.get('https://zentracloud.com/api/v3/get_readings', params=pa
 data = response.json()
 
 dataframe_data = json.loads(data['data']) # it is a string encoded json payload so you must decode it again 
-df = pandas.DataFrame(**dataframe_data)
+print(df) # now that our data is in a dataframe it is much easier to work with
+
+#lets select our battery readings
+battery_readings_mask = df['measurement']=='Battery Percent'
+battery_readings = df[battery_readings_mask].copy()
+```
+
+### convert our index to datetimes and plot the battery data
+
+```python
+import matplotlib
+...
+battery_readings = df[battery_readings_mask].copy()
+datetimes = pandas.to_datetime( battery_readings['timestamp_utc'], unit='s')
+
+battery_readings = battery_readings.set_index( datetimes )
+#resample the data
+resampled_data = battery_readings.resample('1h')['value'].agg('mean')
+battery_readings.plot()
+pyplot.show()
 ```
