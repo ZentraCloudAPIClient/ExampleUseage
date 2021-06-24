@@ -53,6 +53,6 @@ params = {'per_page':2000, 'device_sn': DEVICE_SN, 'output_format': 'df'}
 response = requests.get('https://zentracloud.com/api/v3/get_readings', params=params, headers=headers)
 data = response.json()
 
-dataframe_data = json.loads(data['data']['readings']) # it is a string encoded json payload so you must decode it again 
+dataframe_data = json.loads(data['data']) # it is a string encoded json payload so you must decode it again 
 df = pandas.DataFrame(**dataframe_data)
 ```
